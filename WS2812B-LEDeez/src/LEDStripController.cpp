@@ -52,30 +52,28 @@ void LEDController::run() {
             break;
 
         case 'r':  // Solid
-            clear();
             breathe(CRGB::Green, 20); //breathe(CRGB::Green, bpm = 20);
             FastLED.show();
             break;
 
         case 'i':  // Twinkle
-            clear();
             twinkle(CRGB::Blue, 45);
             FastLED.show();
             break;
 
         case 'w':  // Dual breathe
-            clear();
             dualBreathe(CRGB::Purple, CRGB::Green);
             FastLED.show();
 
         case 'e':  // Sine wave
-            clear();
             sineWave(CRGB::Red, 2);
             FastLED.show();
             break;
+        case 'c':
+            colorCylon();
+            FastLED.show();
     }
 }
-
 
 void LEDController::clear() {
     FastLED.clear();
@@ -115,6 +113,39 @@ void LEDController::sineWave(CRGB wave_color, uint8_t wave_speed) {
     phase += wave_speed;  // Adjust wave speed
 }
 
+void  LEDController::cylon(CRGB wave_color, uint8_t fadeAmount) {
+    static uint8_t pos = 0;
+    static int8_t direction = 1;
+
+    // Fade all LEDs
+    fadeToBlackBy(leds, numLeds, fadeAmount);
+
+    // Set current position
+    leds[pos] = wave_color;
+
+    // Move position
+    pos += direction;
+    if (pos == 0 || pos == numLeds - 1) {
+        direction = -direction;
+    }
+}
+
+void LEDController::colorCylon(uint8_t fadeAmount) {
+    static uint8_t pos = 0;
+    static int8_t direction = 1;
+    static uint8_t hue = 0;
+
+    fadeToBlackBy(leds, numLeds, fadeAmount);
+
+    leds[pos] = CHSV(hue, 255, 255);
+
+    pos += direction;
+    if (pos == 0 || pos == numLeds - 1) {
+        direction = -direction;
+        hue += 32;  // Change color at each bounce
+    }
+}
+
 void LEDController::dualBreathe(CRGB color1_in, CRGB color2_in) {
     uint8_t brightness1 = beatsin8(8);
     uint8_t brightness2 = 255 - brightness1;
@@ -133,3 +164,4 @@ void LEDController::dualBreathe(CRGB color1_in, CRGB color2_in) {
 CRGB* LEDController::getLeds() {
     return leds;
 }
+

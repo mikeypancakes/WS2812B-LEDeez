@@ -29,6 +29,8 @@ public:
     void sineWave(CRGB color, uint8_t speed = 2);
     void dualBreathe(CRGB color1, CRGB color2);
     void twinkle(CRGB color, uint8_t chance = 20, uint8_t fadeAmount = 10);
+    void cylon(CRGB color, uint8_t fadeAmount = 35);
+    void colorCylon(uint8_t fadeAmount = 35);
 
     CRGB* getLeds();
     uint16_t size() { return numLeds; }
